@@ -4,11 +4,11 @@
 为了方便快速构建项目，在windows平台下，使用CMake去管理项目。做一下CMake的实战笔记。
 
 # 环境准备
-去[CMake官网](https://hahack.com/codes/cmake)下载，安装好CMake。为了方便可以选择后续执行命令，可以选择将命令行加入到系统Path。
+去[CMake官网](https://cmake.org/download/)下载，安装好CMake。为了方便可以选择后续执行命令，可以选择将命令行加入到系统Path。
 
 # 入门案例：单个源文件
 
-> 本节对应的源代码所在目录：[Demo1](./Demo1)
+> 本节对应的源代码所在目录：[Demo1](https://github.com/iherewaitfor/cmakevisualstudio/tree/main/demo1)
 
 对于简单的项目，只需要写几行代码就可以了。例如，假设现在我们的项目中只有一个源文件 main.cpp ，该程序的用途是计算一个数的指数幂。
 
