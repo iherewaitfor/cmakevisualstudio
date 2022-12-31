@@ -114,6 +114,24 @@ D:\srccode\cmakevisualstudio\demo1\build>
 执行完后，在build中生成了对应的工程文件.生成的文件列表如下。其中Demo1.sln即为解决方案文件。
 ![Image build生成的文件列表](./images/demo1_buildfiles.png)
 
+使用命令行完成编译
+```
+D:\srccode\cmakevisualstudio\demo2\build>cmake --build .
+MSBuild version 17.3.1+2badb37d1 for .NET Framework
+  Checking Build System
+  Building Custom Rule D:/srccode/cmakevisualstudio/demo2/CMakeLists.txt
+  MathFunctions.cpp
+  main.cpp
+  正在生成代码...
+  Demo.vcxproj -> D:\srccode\cmakevisualstudio\demo2\build\Debug\Demo.exe
+  Building Custom Rule D:/srccode/cmakevisualstudio/demo2/CMakeLists.txt
+
+D:\srccode\cmakevisualstudio\demo2\build>.\Debug\Demo.exe 2 3
+2 ^ 3 is 8
+
+D:\srccode\cmakevisualstudio\demo2\build>
+```
+
 ## 使用CMakeGui生成Visual Studio的sln文件。
 1. 打开CMake-gui,souce code 选./demo1
 2. "where to build the binaries:"选 ./demo1/build
