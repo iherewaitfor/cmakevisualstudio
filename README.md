@@ -114,7 +114,7 @@ D:\srccode\cmakevisualstudio\demo1\build>
 执行完后，在build中生成了对应的工程文件.生成的文件列表如下。其中Demo1.sln即为解决方案文件。
 ![Image build生成的文件列表](./images/demo1_buildfiles.png)
 
-## 使用CMakeGui生成video studio的sln文件。
+## 使用CMakeGui生成Visual Studio的sln文件。
 1. 打开CMake-gui,souce code 选./demo1
 2. "where to build the binaries:"选 ./demo1/build
 3. 点击conigure，在弹窗中，选择对应的Visual Studio 版本
