@@ -1,5 +1,5 @@
 
-# CMake 结合 videostudio实战
+# CMake 结合 Visual studio 实战
 
 为了方便快速构建项目，在windows平台下，使用CMake去管理项目。做一下CMake的实战笔记。
 
