@@ -6,7 +6,7 @@
 # 环境准备
 去[CMake官网](https://cmake.org/download/)下载，安装好CMake。为了方便可以选择后续执行命令，可以选择将命令行加入到系统Path。
 
-# 入门案例：单个源文件
+# 一、入门案例：单个源文件
 
 > 本节对应的源代码所在目录：[Demo1](https://github.com/iherewaitfor/cmakevisualstudio/tree/main/demo1)
 
@@ -123,13 +123,68 @@ D:\srccode\cmakevisualstudio\demo1\build>
 ![Image cmake-gui](./images/demo1_cmakegui.png)
 
 生成的文件如下
+
 ![Image cmake-gui](./images/demo1_cmakegui_buidfiles.png)
 
 
 
+# 二、同一目录，多个源文件
+
+> 本小节对应的源代码所在目录：[Demo2](https://github.com/iherewaitfor/cmakevisualstudio/tree/main/Demo2)。
+
+上面的例子只有单个源文件。现在假如把 `power` 函数单独写进一个名为 `MathFunctions.cpp` 的源文件里，使得这个工程变成如下的形式：
+
+``` plain
+./Demo2
+    |
+    +--- main.cpp
+	|
+	+--- MathFunctions.cpp
+	|
+	+--- MathFunctions.h
+```
+
+这个时候，CMakeLists.txt 可以改成如下的形式：
+
+``` plain
+# CMake 最低版本号要求
+cmake_minimum_required (VERSION 2.8)
+
+# 项目信息
+project (Demo2)
+
+# 指定生成目标
+add_executable(Demo main.cpp MathFunctions.cpp)
+```
+
+唯一的改动只是在 `add_executable` 命令中增加了一个 `MathFunctions.cpp
 
 
 
+` 源文件。这样写当然没什么问题，但是如果源文件很多，把所有源文件的名字都加进去将是一件烦人的工作。更省事的方法是使用 `aux_source_directory` 命令，该命令会查找指定目录下的所有源文件，然后将结果存进指定变量名。其语法如下：
+
+```
+aux_source_directory(<dir> <variable>)
+```
+
+因此，可以修改 CMakeLists.txt 如下：
+
+``` plain
+# CMake 最低版本号要求
+cmake_minimum_required (VERSION 2.8)
+
+# 项目信息
+project (Demo2)
+
+# 查找当前目录下的所有源文件
+# 并将名称保存到 DIR_SRCS 变量
+aux_source_directory(. DIR_SRCS)
+
+# 指定生成目标
+add_executable(Demo ${DIR_SRCS})
+```
+
+这样，CMake 会将当前目录所有源文件的文件名赋值给变量 `DIR_SRCS` ，再指示变量 `DIR_SRCS` 中的源文件需要编译成一个名称为 Demo 的可执行文件。
 
 
 # 主要参考
