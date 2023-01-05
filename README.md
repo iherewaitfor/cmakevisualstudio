@@ -204,7 +204,7 @@ add_executable(Demo ${DIR_SRCS})
 
 这样，CMake 会将当前目录所有源文件的文件名赋值给变量 `DIR_SRCS` ，再指示变量 `DIR_SRCS` 中的源文件需要编译成一个名称为 Demo 的可执行文件。
 
-# 三、多个目录，多个源文件
+# 3.1 多个目录，多个源文件
 > 本小节对应的源代码所在目录：[Demo3](https://github.com/iherewaitfor/cmakevisualstudio/tree/main/Demo3)。
 
 现在进一步将 MathFunctions.h 和 MathFunctions.cpp 文件移动到 math 目录下。 
@@ -260,6 +260,94 @@ add_library (MathFunctions ${DIR_LIB_SRCS})
 
 在该文件中使用命令 `add_library` 将 src 目录中的源文件编译为静态链接库。
 
+# 多个目录，多个源文件。动态链接库。
+> 本小节对应的源代码所在目录：[Demo3—_1](https://github.com/iherewaitfor/cmakevisualstudio/tree/main/Demo3_1)。
+
+现在进一步将 MathFunctions.h 和 MathFunctions.cpp 文件移动到 math 目录下。 
+
+``` plain
+./Demo3
+    |
+    +--- main.cc
+	|
+	+--- math/
+	      |
+	      +--- MathFunctions.cpp
+	      |
+	      +--- MathFunctions.h
+```
+
+先修改.h和.cpp，修改为dll导出函数.
+
+MathFunctions.h
+
+``` c++
+#ifndef POWER_H
+#define POWER_H
+
+#ifdef MATHFUNCIONS
+	#define MY_LIB_API __declspec(dllexport)
+#else
+	#define MY_LIB_API __declspec(dllimport)
+#endif
+MY_LIB_API double  power(double base, int exponent);
+
+#endif
+```
+其中根据是否有宏定义MATHFUNCIONS，来定义导出还是导入。 在MathFuncions动态库项目中定义宏MATHFUNCIONS。
+
+cpp中定义导出函数。
+
+MathFunctions.cpp
+
+``` C++
+#include "MathFunctions.h"
+/**
+ * power - Calculate the power of number.
+ * @param base:	Base value.
+ * @param exponent: Exponent value.
+ *
+ * @return base raised to the power exponent.
+ */
+MY_LIB_API double power(double base, int exponent)
+{
+    double result = base;
+    int i;
+
+    if (exponent == 0) {
+        return 1;
+    }
+    
+    for(i = 1; i < exponent; ++i){
+        result = result * base;
+    }
+
+    return result;
+}
+```
+
+math/CMakeLists.txt文件中做两个关键修改
+- 定义宏MATHFUNCIONS.
+```
+add_definitions("-DMATHFUNCIONS" "-D_MATHFUNCIONS")
+```
+- 定义为动态链接库，使用了关键字SHARED
+```
+add_library(MathFunctions SHARED ${DIR_LIB_SRCS})
+```
+完整的math/CMakeLists.txt内容如下：
+```
+# 查找目录下的所有源文件
+# 并将名称保存到DIR_LIB_SRCS变量
+aux_source_directory(. DIR_LIB_SRCS)
+add_definitions("-DMATHFUNCIONS" "-D_MATHFUNCIONS")
+
+# 指定生成MathFunctions链接库
+add_library(MathFunctions SHARED ${DIR_LIB_SRCS})
+```
+
+此时编译MathFuncitons项目时，会同时生成MathFuncitons.dll和MathFuncitons.lib。
+到时运行Demo.exe时，需要把MathFuncitons.dll放到Demo.exe的同目录。Demo.exe运行需要依赖MathFuncitons.dll动态库。
 
 # 主要参考
 
