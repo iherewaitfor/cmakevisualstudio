@@ -204,6 +204,9 @@ add_executable(Demo ${DIR_SRCS})
 
 这样，CMake 会将当前目录所有源文件的文件名赋值给变量 `DIR_SRCS` ，再指示变量 `DIR_SRCS` 中的源文件需要编译成一个名称为 Demo 的可执行文件。
 
+# 二、多个目录，多个源文件
+
+
 
 # 主要参考
 
