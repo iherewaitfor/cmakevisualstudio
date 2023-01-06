@@ -349,6 +349,160 @@ add_library(MathFunctions SHARED ${DIR_LIB_SRCS})
 此时编译MathFuncitons项目时，会同时生成MathFuncitons.dll和MathFuncitons.lib。
 到时运行Demo.exe时，需要把MathFuncitons.dll放到Demo.exe的同目录。Demo.exe运行需要依赖MathFuncitons.dll动态库。
 
+# 四 自定义编译选项
+> 本小节对应的源代码所在目录：[Demo4](https://github.com/iherewaitfor/cmakevisualstudio/tree/main/Demo4)。
+
+CMake 允许为项目增加编译选项，从而可以根据用户的环境和需求选择最合适的编译方案。
+
+例如，可以将 MathFunctions 库设为一个可选的库，如果该选项为 `ON` ，就使用该库定义的数学函数来进行运算。否则就调用标准库中的数学函数库。
+
+#### 修改 CMakeLists 文件 ####
+
+我们要做的第一步是在顶层的 CMakeLists.txt 文件中添加该选项：
+
+``` plain
+# CMake 最低版本号要求
+cmake_minimum_required (VERSION 2.8)
+
+# 项目信息
+project (Demo4)
+
+# 加入一个配置头文件，用于处理 CMake 对源码的设置
+configure_file (
+  "${PROJECT_SOURCE_DIR}/config.h.in"
+  "${PROJECT_BINARY_DIR}/config.h"
+  )
+
+# 是否使用自己的 MathFunctions 库
+option (USE_MYMATH
+	   "Use provided math implementation" ON)
+
+# 是否加入 MathFunctions 库
+if (USE_MYMATH)
+  include_directories ("${PROJECT_SOURCE_DIR}/math")
+  add_subdirectory (math)  
+  set (EXTRA_LIBS ${EXTRA_LIBS} MathFunctions)
+endif (USE_MYMATH)
+
+# 查找当前目录下的所有源文件
+# 并将名称保存到 DIR_SRCS 变量
+aux_source_directory(. DIR_SRCS)
+
+# 指定生成目标
+add_executable(Demo ${DIR_SRCS})
+target_link_libraries (Demo  ${EXTRA_LIBS})
+```
+
+其中：
+
+1. 第7行的 `configure_file` 命令用于加入一个配置头文件 config.h ，这个文件由 CMake 从 config.h.in 生成，通过这样的机制，将可以通过预定义一些参数和变量来控制代码的生成。
+2. 第13行的 `option` 命令添加了一个 `USE_MYMATH` 选项，并且默认值为 `ON` 。
+3. 第17行根据 `USE_MYMATH` 变量的值来决定是否使用我们自己编写的 MathFunctions 库。
+
+#### 修改 main.cc 文件 ####
+
+之后修改 main.cc 文件，让其根据 `USE_MYMATH` 的预定义值来决定是否调用标准库还是 MathFunctions 库：
+
+``` plain
+#include <stdio.h>
+#include <stdlib.h>
+#include "config.h"
+
+#ifdef USE_MYMATH
+  #include "math/MathFunctions.h"
+#else
+  #include <math.h>
+#endif
+
+
+int main(int argc, char *argv[])
+{
+    if (argc < 3){
+        printf("Usage: %s base exponent \n", argv[0]);
+        return 1;
+    }
+    double base = atof(argv[1]);
+    int exponent = atoi(argv[2]);
+    
+#ifdef USE_MYMATH
+    printf("Now we use our own Math library. \n");
+    double result = power(base, exponent);
+#else
+    printf("Now we use the standard library. \n");
+    double result = pow(base, exponent);
+#endif
+    printf("%g ^ %d is %g\n", base, exponent, result);
+    return 0;
+}
+```
+
+#### 编写 config.h.in 文件 ####
+
+上面的程序值得注意的是第2行，这里引用了一个 config.h 文件，这个文件预定义了 `USE_MYMATH` 的值。但我们并不直接编写这个文件，为了方便从 CMakeLists.txt 中导入配置，我们编写一个 config.h.in 文件，内容如下：
+
+``` plain
+#cmakedefine USE_MYMATH
+```
+
+这样 CMake 会自动根据 CMakeLists 配置文件中的设置自动生成 config.h 文件。
+
+#### 编译项目 ####
+
+现在编译一下这个项目，为了便于交互式的选择该变量的值，可以使用
+  -  cmake-gui进行配置。选择勾选不勾选USE_MYMATH选项生成项目。
+
+  - 或者使用命令行加上-D选项，直接设置USE_MYMATH的值。
+```
+D:\srccode\cmakevisualstudio\demo4\build>cmake .. -D USE_MYMATH=OFF -G "Visual Studio 17 2022" -A Win32
+```
+
+可以试试分别将 `USE_MYMATH` 设为 `ON` 和 `OFF` 得到的结果：
+
+##### USE_MYMATH 为 ON #####
+
+运行结果：
+
+``` plain
+[ehome@xman Demo4]$ ./Demo
+Now we use our own MathFunctions library. 
+ 7 ^ 3 = 343.000000
+ 10 ^ 5 = 100000.000000
+ 2 ^ 10 = 1024.000000
+```
+
+此时 config.h 的内容为：
+
+``` plain
+#define USE_MYMATH
+```
+
+##### USE_MYMATH 为 OFF #####
+
+运行结果：
+
+``` plain
+[ehome@xman Demo4]$ ./Demo
+Now we use the standard library. 
+ 7 ^ 3 = 343.000000
+ 10 ^ 5 = 100000.000000
+ 2 ^ 10 = 1024.000000
+```
+
+此时 config.h 的内容为空。
+
+``` plain
+/* #undef USE_MYMATH */
+```
+
+也可以通过修改config.h.in文件。写上
+``` plain
+#cmakedefine USE_MYMATH
+```
+时表示USE_MYMATH为ON。把该行注释掉。或者删掉，则表示USE_MYMATH为OFF。可以使用以下命令行生成项目。
+```
+D:\srccode\cmakevisualstudio\demo4\build>cmake .. -G "Visual Studio 17 2022" -A Win32
+```
+
 # 主要参考
 
 https://www.hahack.com/codes/cmake/
