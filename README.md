@@ -349,6 +349,20 @@ add_library(MathFunctions SHARED ${DIR_LIB_SRCS})
 此时编译MathFuncitons项目时，会同时生成MathFuncitons.dll和MathFuncitons.lib。
 到时运行Demo.exe时，需要把MathFuncitons.dll放到Demo.exe的同目录。Demo.exe运行需要依赖MathFuncitons.dll动态库。
 
+## add_custom_command copy
+添加自定义命令。在Demo.exe生成后，自动 将其依赖的MathFunctions.dll动态 链接库复制到Demo.exe的同一个目录下。通过 $<CONFIGURATION>自动匹配Deubg/Release。
+另外PROJECT_BINARY_DIR 表示运行cmake命令的目录，通常为build目录。
+```
+# PROJECT_BINARY_DIR 表示运行cmake命令的目录，通常为build目录
+# $<CONFIGURATION>根据实际配置，为Debug或者Release
+# 该命令用于在Demo.exe项目生成后，自动将其依赖的MathFunctions.dll动态链接库复制到Demo.exe的同一个文件夹下。
+ 
+add_custom_command(TARGET Demo
+  POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/math/$<CONFIGURATION>/MathFunctions.dll ${PROJECT_BINARY_DIR}/$<CONFIGURATION>
+  )
+```
+
 # 四 自定义编译选项
 > 本小节对应的源代码所在目录：[Demo4](https://github.com/iherewaitfor/cmakevisualstudio/tree/main/Demo4)。
 
