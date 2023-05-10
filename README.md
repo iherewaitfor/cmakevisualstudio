@@ -519,6 +519,13 @@ D:\srccode\cmakevisualstudio\demo4\build>cmake .. -G "Visual Studio 17 2022" -A 
 
 # 主要参考
 
-https://www.hahack.com/codes/cmake/
+[https://www.hahack.com/codes/cmake/](https://www.hahack.com/codes/cmake/)
 
-https://github.com/wzpan/cmake-demo
+[https://github.com/wzpan/cmake-demo](https://www.hahack.com/codes/cmake/)
+
+
+
+[https://cmake.org/cmake/help/latest/manual/cmake-variables.7.html](https://cmake.org/cmake/help/latest/manual/cmake-variables.7.html)
+
+[https://cmake.org/cmake/help/latest/manual/cmake-commands.7.html](https://cmake.org/cmake/help/latest/manual/cmake-commands.7.html)
+
