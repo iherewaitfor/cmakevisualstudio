@@ -516,7 +516,37 @@ Now we use the standard library.
 ```
 D:\srccode\cmakevisualstudio\demo4\build>cmake .. -G "Visual Studio 17 2022" -A Win32
 ```
+# makefile中如何选择x64或x86
+## 使用CMAKE_SIZEOF_VOID_P
+CMAKE_SIZEOF_VOID_P: 如果是64位，值为8（表示8个字节）;如果32位，值为4。
+可以通过变量值判断，来进行对应库选择。
+参考
+[https://cmake.org/cmake/help/latest/variable/CMAKE_SIZEOF_VOID_P.html#variable:CMAKE_SIZEOF_VOID_P](https://cmake.org/cmake/help/latest/variable/CMAKE_SIZEOF_VOID_P.html#variable:CMAKE_SIZEOF_VOID_P)
 
+CMAKE控制流逻辑参考
+
+[https://cmake.org/cmake/help/latest/command/if.html#command:if](https://cmake.org/cmake/help/latest/command/if.html#command:if)
+
+[https://cmake.org/cmake/help/latest/manual/cmake-language.7.html](https://cmake.org/cmake/help/latest/manual/cmake-language.7.html)
+
+```
+#CMAKE_SIZEOF_VOID_P: 如果是64位，值为8（表示8个字节）;如果32位，值为4。
+#This is set to the size of a pointer(in byte) on the target machine, and is determined by a try compile. If a 64-bit size is found, then the library search #path is modified to look for 64-bit libraries first.
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+	link_directories(${PROJECT_SOURCE_DIR}/../../Lib/x64)
+else()
+	link_directories(${PROJECT_SOURCE_DIR}/../../Lib/x86)
+endif()
+```
+
+## 使用CMAKE_VS_PLATFORM_TOOLSET_HOST_ARCHITECTURE
+CMAKE_VS_PLATFORM_TOOLSET_HOST_ARCHITECTURE变量的值直接为x86 或者是x64
+
+```
+#https://cmake.org/cmake/help/latest/variable/CMAKE_VS_PLATFORM_TOOLSET_HOST_ARCHITECTURE.html
+#vs2013及以上可以使用变量CMAKE_VS_PLATFORM_TOOLSET_HOST_ARCHITECTURE
+#link_directories(${PROJECT_SOURCE_DIR}/../../Lib/${CMAKE_VS_PLATFORM_TOOLSET_HOST_ARCHITECTURE})
+```
 # 主要参考
 
 [https://www.hahack.com/codes/cmake/](https://www.hahack.com/codes/cmake/)
@@ -528,4 +558,6 @@ D:\srccode\cmakevisualstudio\demo4\build>cmake .. -G "Visual Studio 17 2022" -A 
 [https://cmake.org/cmake/help/latest/manual/cmake-variables.7.html](https://cmake.org/cmake/help/latest/manual/cmake-variables.7.html)
 
 [https://cmake.org/cmake/help/latest/manual/cmake-commands.7.html](https://cmake.org/cmake/help/latest/manual/cmake-commands.7.html)
+
+[https://cmake.org/cmake/help/latest/manual/cmake-language.7.html](https://cmake.org/cmake/help/latest/manual/cmake-language.7.html)
 
