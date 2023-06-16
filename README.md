@@ -547,6 +547,27 @@ CMAKE_VS_PLATFORM_TOOLSET_HOST_ARCHITECTURE变量的值直接为x86 或者是x64
 #vs2013及以上可以使用变量CMAKE_VS_PLATFORM_TOOLSET_HOST_ARCHITECTURE
 link_directories(${PROJECT_SOURCE_DIR}/../../Lib/${CMAKE_VS_PLATFORM_TOOLSET_HOST_ARCHITECTURE})
 ```
+
+# 常用命令
+cmake命令官方文档。
+[https://cmake.org/cmake/help/latest/manual/cmake-commands.7.html](https://cmake.org/cmake/help/latest/manual/cmake-commands.7.html)
+
+## source_group
+[https://cmake.org/cmake/help/latest/command/source_group.html](
+https://cmake.org/cmake/help/latest/command/source_group.html)
+
+使用示例：
+```
+set(SHARED_RESOURCES_SRCS
+../shared/resources/win/big.ico
+../shared/resources/win/resource.h
+../shared/resources/win/shared.rc
+../shared/resources/win/small.ico
+)
+source_group("shared/resources/win" FILES ${SHARED_RESOURCES_SRCS})
+```
+
+
 # 主要参考
 
 [https://www.hahack.com/codes/cmake/](https://www.hahack.com/codes/cmake/)
