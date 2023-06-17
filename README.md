@@ -1,3 +1,27 @@
+- [CMake 结合 Visual studio 实战](#cmake-结合-visual-studio-实战)
+- [环境准备](#环境准备)
+- [一、入门案例：单个源文件](#一入门案例单个源文件)
+      - [编写 CMakeLists.txt](#编写-cmakeliststxt)
+  - [使用命令行生成video studio 的sln文件。](#使用命令行生成video-studio-的sln文件)
+  - [使用CMakeGui生成Visual Studio的sln文件。](#使用cmakegui生成visual-studio的sln文件)
+- [二、同一目录，多个源文件](#二同一目录多个源文件)
+- [3.1 多个目录，多个源文件](#31-多个目录多个源文件)
+- [多个目录，多个源文件。动态链接库。](#多个目录多个源文件动态链接库)
+  - [add\_custom\_command copy](#add_custom_command-copy)
+- [四 自定义编译选项](#四-自定义编译选项)
+      - [修改 CMakeLists 文件](#修改-cmakelists-文件)
+      - [修改 main.cc 文件](#修改-maincc-文件)
+      - [编写 config.h.in 文件](#编写-confighin-文件)
+      - [编译项目](#编译项目)
+        - [USE\_MYMATH 为 ON](#use_mymath-为-on)
+        - [USE\_MYMATH 为 OFF](#use_mymath-为-off)
+- [makefile中如何选择x64或x86](#makefile中如何选择x64或x86)
+  - [使用CMAKE\_SIZEOF\_VOID\_P](#使用cmake_sizeof_void_p)
+  - [使用CMAKE\_VS\_PLATFORM\_TOOLSET\_HOST\_ARCHITECTURE](#使用cmake_vs_platform_toolset_host_architecture)
+- [常用命令](#常用命令)
+  - [source\_group](#source_group)
+- [主要参考](#主要参考)
+
 
 # CMake 结合 Visual studio 实战
 
