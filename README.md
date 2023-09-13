@@ -20,6 +20,9 @@
   - [使用CMAKE\_VS\_PLATFORM\_TOOLSET\_HOST\_ARCHITECTURE](#使用cmake_vs_platform_toolset_host_architecture)
 - [常用命令](#常用命令)
   - [source\_group](#source_group)
+  - [file](#file)
+    - [取绝对路径](#取绝对路径)
+    - [取相对路径](#取相对路径)
 - [主要参考](#主要参考)
 
 
@@ -590,6 +593,30 @@ set(SHARED_RESOURCES_SRCS
 )
 source_group("shared/resources/win" FILES ${SHARED_RESOURCES_SRCS})
 ```
+## file
+### 取绝对路径
+取绝对路径，后缀名为.vs或.fs的文件。
+```C++
+file (GLOB SHADER_FILES
+		"*.vs" "*.fs")
+```
+得到的结果类似。
+```
+D:\srccode\opengldemo\gettingstarted\shaders_class\3.3.shader.fs;D:\srccode\opengldemo\gettingstarted\shaders_class\3.3.shader.vs;
+```
+
+### 取相对路径
+取相对路径，后缀名为.vs或.fs的文件。是相对${PROJECT_SOURCE_DIR}的路径。也可以绝对路径上的其他前缀值。
+```C++
+file (GLOB SHADER_FILES RELATIVE ${PROJECT_SOURCE_DIR}
+		"*.vs" "*.fs")
+```
+得到的结果类似:(不含前面的绝对路径部分)
+```
+3.3.shader.fs;3.3.shader.vs;
+```
+
+
 
 
 # 主要参考
